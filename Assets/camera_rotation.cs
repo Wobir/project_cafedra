@@ -1,49 +1,50 @@
 using UnityEngine;
-using UnityEngine.InputSystem; 
+using UnityEngine.InputSystem;
+
 public class camera_rotation : MonoBehaviour
 {
-        public Transform target;       // объект, вокруг которого вращаемся
+    public Transform target;       // объект, вокруг которого вращаемся
     public float distance = 5.0f;  // расстояние до объекта
-    public float xSpeed = 120.0f;  // скорость вращения по X (влево-вправо)
-    public float ySpeed = 80.0f;   // скорость вращения по Y (вверх-вниз)
+    public float rotationSpeed = 90.0f; // скорость вращения по Y (градусы/сек)
+    public float zoomSpeed = 2.0f; // скорость приближения/отдаления
+    public float minDistance = 2f; // минимальная дистанция
+    public float maxDistance = 15f; // максимальная дистанция
 
-    public float yMinLimit = -20f; // ограничение угла по Y
-    public float yMaxLimit = 80f;
-
-    private float x = 0.0f;
-    private float y = 0.0f;
+    private float x = 0.0f; // угол по горизонтали
+    private float y = 20.0f; // угол по вертикали (можно менять на W/S)
 
     void Start()
     {
         if (target == null)
         {
-            Debug.LogWarning("OrbitCamera: не назначен target!");
+            Debug.LogWarning("camera_rotation: не назначен target!");
             return;
         }
 
         Vector3 angles = transform.eulerAngles;
         x = angles.y;
         y = angles.x;
-
-        // отключаем вращение Rigidbody, если есть
-        if (GetComponent<Rigidbody>())
-            GetComponent<Rigidbody>().freezeRotation = true;
     }
 
     void LateUpdate()
     {
-        if (target == null || Mouse.current == null) return;
+        if (target == null || Keyboard.current == null || Mouse.current == null) return;
 
-        // читаем движение мыши (дельта с последнего кадра)
-        Vector2 mouseDelta = Mouse.current.delta.ReadValue();
+        // вращение по Q/E
+        float input = 0f;
+        if (Keyboard.current.qKey.isPressed)
+            input = -1f;
+        if (Keyboard.current.eKey.isPressed)
+            input = 1f;
 
-        x += mouseDelta.x * xSpeed * Time.deltaTime;
-        y -= mouseDelta.y * ySpeed * Time.deltaTime;
+        x += input * rotationSpeed * Time.deltaTime;
 
-        // ограничиваем угол по вертикали
-        y = Mathf.Clamp(y, yMinLimit, yMaxLimit);
+        // зум колесиком мыши
+        float scroll = Mouse.current.scroll.ReadValue().y;
+        distance -= scroll * zoomSpeed * Time.deltaTime;
+        distance = Mathf.Clamp(distance, minDistance, maxDistance);
 
-        // вычисляем вращение и позицию камеры
+        // считаем позицию и поворот камеры
         Quaternion rotation = Quaternion.Euler(y, x, 0);
         Vector3 position = rotation * new Vector3(0.0f, 0.0f, -distance) + target.position;
 

@@ -3,12 +3,17 @@ using UnityEngine.InputSystem;
 
 public class rotate_with_buttons : MonoBehaviour
 {
-    public float rotationSpeed = 100f;
+    public float rotationSpeed = 100f;      
+    public float damping = 5f;           
+    
+    private float velocityX = 0f;
+    private float velocityZ = 0f;
 
     private float currentX = 0f;
     private float currentZ = 0f;
-    private float maxRotateX = 45f;
-    private float maxRotateZ = 45f;
+
+    public float maxRotateX = 45f;
+    public float maxRotateZ = 45f;
 
     void Update()
     {
@@ -26,15 +31,18 @@ public class rotate_with_buttons : MonoBehaviour
         if (Keyboard.current.dKey.isPressed)
             inputZ = 1f;
 
-        // обновляем углы с учётом скорости
-        currentX += inputX * rotationSpeed * Time.deltaTime;
-        currentZ += inputZ * rotationSpeed * Time.deltaTime;
+        velocityX += inputX * rotationSpeed * Time.deltaTime;
+        velocityZ += inputZ * rotationSpeed * Time.deltaTime;
 
-        // ограничиваем углы
+        velocityX = Mathf.Lerp(velocityX, 0f, damping * Time.deltaTime);
+        velocityZ = Mathf.Lerp(velocityZ, 0f, damping * Time.deltaTime);
+
+        currentX += velocityX * Time.deltaTime;
+        currentZ += velocityZ * Time.deltaTime;
+
         currentX = Mathf.Clamp(currentX, -maxRotateX, maxRotateX);
         currentZ = Mathf.Clamp(currentZ, -maxRotateZ, maxRotateZ);
 
-        // применяем поворот (локальный, чтобы не "плыл" относительно мира)
         transform.localRotation = Quaternion.Euler(currentX, 0f, currentZ);
     }
 }

@@ -269,12 +269,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db85ddd2b763be83f96ed3c5b38fe21e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::camera_rotation
-  target: {fileID: 936388585}
-  distance: 30
-  xSpeed: 120
-  ySpeed: 80
-  yMinLimit: -20
-  yMaxLimit: 80
+  target: {fileID: 1866287410}
+  distance: 5
+  rotationSpeed: 90
+  zoomSpeed: 20
+  minDistance: 2
+  maxDistance: 15
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -468,7 +468,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55654f91129784922b0c9f1e9f6d0faf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::rotate_with_buttons
-  rotationSpeed: 80
+  rotationSpeed: 100
+  damping: 4
+  maxRotateX: 30
+  maxRotateZ: 30
 --- !u!54 &936388581
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -495,12 +498,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
-  m_CollisionDetection: 0
---- !u!4 &936388585 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7ecd60f585275f55ca41d79eae4d2864, type: 3}
-  m_PrefabInstance: {fileID: 1043472978}
-  m_PrefabAsset: {fileID: 0}
+  m_CollisionDetection: 1
 --- !u!64 &936388586
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -617,8 +615,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1866287405}
   serializedVersion: 5
-  m_Mass: 100
-  m_LinearDamping: 0
+  m_Mass: 10
+  m_LinearDamping: 0.05
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -633,7 +631,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 2
 --- !u!135 &1866287407
@@ -722,8 +720,8 @@ Transform:
   m_GameObject: {fileID: 1866287405}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.646, y: 5.6, z: 0.22}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalPosition: {x: 2.77, y: 5.04, z: -0.6}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
