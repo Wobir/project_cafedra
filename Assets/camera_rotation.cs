@@ -3,15 +3,19 @@ using UnityEngine.InputSystem;
 
 public class camera_rotation : MonoBehaviour
 {
-    public Transform target;       // объект, вокруг которого вращаемся
-    public float distance = 5.0f;  // расстояние до объекта
-    public float rotationSpeed = 90.0f; // скорость вращения по Y (градусы/сек)
-    public float zoomSpeed = 2.0f; // скорость приближения/отдаления
-    public float minDistance = 2f; // минимальная дистанция
-    public float maxDistance = 15f; // максимальная дистанция
+    public Transform target;          // объект, вокруг которого вращаемся
+    public float distance = 5.0f;     // расстояние до объекта
+    public float rotationStep = 90f;  // шаг поворота по нажатию (градусы)
+    public float rotationSmooth = 5f; // скорость плавного поворота
+    public float zoomSpeed = 2.0f;    // скорость приближения/отдаления
+    public float minDistance = 2f;    // минимальная дистанция
+    public float maxDistance = 15f;   // максимальная дистанция
+    public float followSmooth = 5f;   // скорость сглаживания слежения
 
-    private float x = 0.0f; // угол по горизонтали
-    private float y = 20.0f; // угол по вертикали (можно менять на W/S)
+    private float currentX;   // текущий угол по горизонтали
+    private float targetX;    // целевой угол по горизонтали
+    private float y = 20.0f;  // угол по вертикали
+    private Vector3 smoothedTargetPos; // сглаженное положение цели
 
     void Start()
     {
@@ -22,31 +26,39 @@ public class camera_rotation : MonoBehaviour
         }
 
         Vector3 angles = transform.eulerAngles;
-        x = angles.y;
+        currentX = angles.y;
+        targetX = currentX;
         y = angles.x;
+
+        smoothedTargetPos = target.position;
     }
 
     void LateUpdate()
     {
         if (target == null || Keyboard.current == null || Mouse.current == null) return;
 
-        // вращение по Q/E
-        float input = 0f;
-        if (Keyboard.current.qKey.isPressed)
-            input = -1f;
-        if (Keyboard.current.eKey.isPressed)
-            input = 1f;
+        // нажали Q — шаг влево
+        if (Keyboard.current.qKey.wasPressedThisFrame)
+            targetX -= rotationStep;
 
-        x += input * rotationSpeed * Time.deltaTime;
+        // нажали E — шаг вправо
+        if (Keyboard.current.eKey.wasPressedThisFrame)
+            targetX += rotationStep;
+
+        // плавно двигаем currentX к targetX
+        currentX = Mathf.LerpAngle(currentX, targetX, Time.deltaTime * rotationSmooth);
+
+        // сглаживаем позицию цели
+        smoothedTargetPos = Vector3.Lerp(smoothedTargetPos, target.position, Time.deltaTime * followSmooth);
 
         // зум колесиком мыши
         float scroll = Mouse.current.scroll.ReadValue().y;
         distance -= scroll * zoomSpeed * Time.deltaTime;
         distance = Mathf.Clamp(distance, minDistance, maxDistance);
 
-        // считаем позицию и поворот камеры
-        Quaternion rotation = Quaternion.Euler(y, x, 0);
-        Vector3 position = rotation * new Vector3(0.0f, 0.0f, -distance) + target.position;
+        // вычисляем позицию и поворот камеры
+        Quaternion rotation = Quaternion.Euler(y, currentX, 0);
+        Vector3 position = rotation * new Vector3(0.0f, 0.0f, -distance) + smoothedTargetPos;
 
         transform.rotation = rotation;
         transform.position = position;
