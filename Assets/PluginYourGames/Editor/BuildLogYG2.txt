@@ -1,3 +1,0 @@
-Build path: /home/wobir/project_cafedra/project_cafedra_build/project_cafedra
-Build number: 4
-PluginYG version: 2.005
