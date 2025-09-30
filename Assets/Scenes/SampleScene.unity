@@ -131,7 +131,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 138942502}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 66bcaf9b95f2f89b7b0c7932ba8f825e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -170,9 +170,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 1
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 2
+  m_CollisionDetection: 1
 --- !u!114 &138942505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,7 +470,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 799831842}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 66bcaf9b95f2f89b7b0c7932ba8f825e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -641,13 +641,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 6.38, y: 10.27, z: -22.77}
+  m_LocalRotation: {x: 0.42261827, y: 0, z: 0, w: 0.9063079}
+  m_LocalPosition: {x: 0.71, y: 10.27, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 50, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -660,7 +660,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4edf4e6f1a6dc3b92c29c9418b1554, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraRotation
-  target: {fileID: 799831847}
+  targets:
+  - {fileID: 799831847}
+  - {fileID: 582632197}
+  - {fileID: 138942508}
   distance: 5
   rotationStep: 90
   rotationSpeed: 5
@@ -670,8 +673,8 @@ MonoBehaviour:
   followSmooth: 5
   minXAngle: -80
   maxXAngle: 80
-  mouseSensitivityX: 200
-  mouseSensitivityY: 150
+  mouseSensitivityX: 140
+  mouseSensitivityY: 110
   currentSide: 0
 --- !u!1001 &1821070960
 PrefabInstance:
