@@ -544,9 +544,15 @@ MonoBehaviour:
   m_ShowToolkit: 0
   m_ShowCustomSorter: 0
   breakBeforeColorGrading: 0
-  m_BeforeTransparentBundles: []
-  m_BeforeStackBundles: []
-  m_AfterStackBundles: []
+  m_BeforeTransparentBundles:
+  - assemblyQualifiedName: EdgeDetect_BeforeTransparent, AGM.EdgeDetection, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  m_BeforeStackBundles:
+  - assemblyQualifiedName: EdgeDetect_BeforeStack, AGM.EdgeDetection, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  m_AfterStackBundles:
+  - assemblyQualifiedName: EdgeDetect_AfterStack, AGM.EdgeDetection, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!1 &1187035556
 GameObject:
   m_ObjectHideFlags: 0
@@ -658,9 +664,7 @@ MonoBehaviour:
   buttonPrefab: {fileID: 4591378803976157219, guid: 7cd9a56467e62f8588f87d05829d8cce, type: 3}
   contentParent: {fileID: 2062961030}
   levels:
-  - level 1
   - level 2
-  - level 3
 --- !u!4 &1227880872
 Transform:
   m_ObjectHideFlags: 0

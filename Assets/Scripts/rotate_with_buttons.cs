@@ -4,42 +4,81 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 [DisallowMultipleComponent]
+[RequireComponent(typeof(Rigidbody))]
 public sealed class RotateWithButtons : MonoBehaviour
 {
-    [SerializeField, Min(0f)] private float rotationSpeed=100f, damping=5f;
-    [SerializeField, Range(0f,90f)] private float maxRotateX=45f, maxRotateZ=45f;
+    [Header("Rotation Settings")]
+    [SerializeField, Min(0f)] private float rotationSpeed = 100f;
+    [SerializeField, Min(0f)] private float damping = 5f;
+    [SerializeField, Range(0f, 90f)] private float maxRotateX = 45f;
+    [SerializeField, Range(0f, 90f)] private float maxRotateZ = 45f;
+
+    [Header("Physics Settings")]
+    [SerializeField, Min(0f)] private float extraGravity = 15f;
+    [SerializeField] private Rigidbody? ballRigidbody;
     [SerializeField] private CameraRotation? cameraRotationScript;
-    [SerializeField] private string sceneToReturn="MainMenu";
 
-    private Vector2 velocity, rotation;
+    [Header("Scene Management")]
+    [SerializeField] private string sceneToReturn = "MainMenu";
 
-    private void Update()
+    private Rigidbody _rigidbody = null!;
+    private Vector2 _velocity;
+    private Vector2 _rotation;
+
+    private void Awake()
     {
-        var kb=Keyboard.current;
-        if(kb==null || cameraRotationScript==null) return;
-        if(kb.escapeKey.wasPressedThisFrame){ SceneManager.LoadScene(sceneToReturn); return; }
+        _rigidbody = GetComponent<Rigidbody>();
+        _rigidbody.isKinematic = true;
 
-        Vector2 input=GetInput(kb,cameraRotationScript.CurrentSide);
-        velocity=Vector2.Lerp(velocity+input*rotationSpeed*Time.deltaTime,Vector2.zero,damping*Time.deltaTime);
-        rotation=new Vector2(
-            Mathf.Clamp(rotation.x+velocity.x*Time.deltaTime,-maxRotateX,maxRotateX),
-            Mathf.Clamp(rotation.y+velocity.y*Time.deltaTime,-maxRotateZ,maxRotateZ)
-        );
-        transform.localRotation=Quaternion.Euler(rotation.x,0f,rotation.y);
+        if (ballRigidbody == null)
+            ballRigidbody = FindAnyObjectByType<Rigidbody>();
     }
 
-    private static Vector2 GetInput(Keyboard kb, CameraRotation.CameraSide side)
+    private void FixedUpdate()
     {
-        bool w=kb.wKey.isPressed,a=kb.aKey.isPressed,s=kb.sKey.isPressed,d=kb.dKey.isPressed;
+        if (Keyboard.current is not { } keyboard || cameraRotationScript == null)
+            return;
+
+        if (keyboard.escapeKey.wasPressedThisFrame)
+        {
+            SceneManager.LoadScene(sceneToReturn);
+            return;
+        }
+
+        Vector2 input = GetInput(keyboard, cameraRotationScript.CurrentSide);
+
+        _velocity = Vector2.Lerp(
+            _velocity + input * rotationSpeed * Time.fixedDeltaTime,
+            Vector2.zero,
+            damping * Time.fixedDeltaTime
+        );
+
+        _rotation.x = Mathf.Clamp(_rotation.x + _velocity.x * Time.fixedDeltaTime, -maxRotateX, maxRotateX);
+        _rotation.y = Mathf.Clamp(_rotation.y + _velocity.y * Time.fixedDeltaTime, -maxRotateZ, maxRotateZ);
+
+        Quaternion targetRotation = Quaternion.Euler(_rotation.x, 0f, _rotation.y);
+        _rigidbody.MoveRotation(targetRotation);
+
+        if (ballRigidbody != null)
+            ballRigidbody.AddForce(-transform.up * extraGravity, ForceMode.Acceleration);
+    }
+
+    private static Vector2 GetInput(Keyboard keyboard, CameraRotation.CameraSide side)
+    {
+        bool w = keyboard.wKey.isPressed;
+        bool a = keyboard.aKey.isPressed;
+        bool s = keyboard.sKey.isPressed;
+        bool d = keyboard.dKey.isPressed;
+
         return side switch
         {
-            CameraRotation.CameraSide.Front => new Vector2((w?1f:0f)-(s?1f:0f),(a?1f:0f)-(d?1f:0f)),
-            CameraRotation.CameraSide.Right => new Vector2((a?1f:0f)-(d?1f:0f),(s?1f:0f)-(w?1f:0f)),
-            CameraRotation.CameraSide.Back => new Vector2((s?1f:0f)-(w?1f:0f),(d?1f:0f)-(a?1f:0f)),
-            CameraRotation.CameraSide.Left => new Vector2((d?1f:0f)-(a?1f:0f),(w?1f:0f)-(s?1f:0f)),
-            _=>Vector2.zero
+            CameraRotation.CameraSide.Front => new Vector2((w ? 1f : 0f) - (s ? 1f : 0f), (a ? 1f : 0f) - (d ? 1f : 0f)),
+            CameraRotation.CameraSide.Right => new Vector2((a ? 1f : 0f) - (d ? 1f : 0f), (s ? 1f : 0f) - (w ? 1f : 0f)),
+            CameraRotation.CameraSide.Back  => new Vector2((s ? 1f : 0f) - (w ? 1f : 0f), (d ? 1f : 0f) - (a ? 1f : 0f)),
+            CameraRotation.CameraSide.Left  => new Vector2((d ? 1f : 0f) - (a ? 1f : 0f), (w ? 1f : 0f) - (s ? 1f : 0f)),
+            _ => Vector2.zero
         };
     }
 
-    public void SetCameraRotation(CameraRotation cam)=>cameraRotationScript=cam;
+    public void SetCameraRotation(CameraRotation cam) => cameraRotationScript = cam;
 }
