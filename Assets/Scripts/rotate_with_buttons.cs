@@ -1,7 +1,6 @@
 #nullable enable
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Rigidbody))]
@@ -18,9 +17,6 @@ public sealed class RotateWithButtons : MonoBehaviour
     [SerializeField] private Rigidbody? ballRigidbody;
     [SerializeField] private CameraRotation? cameraRotationScript;
 
-    [Header("Scene Management")]
-    [SerializeField] private string sceneToReturn = "MainMenu";
-
     private Rigidbody _rigidbody = null!;
     private Vector2 _velocity;
     private Vector2 _rotation;
@@ -36,16 +32,10 @@ public sealed class RotateWithButtons : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Keyboard.current is not { } keyboard || cameraRotationScript == null)
+        if (cameraRotationScript == null)
             return;
 
-        if (keyboard.escapeKey.wasPressedThisFrame)
-        {
-            SceneManager.LoadScene(sceneToReturn);
-            return;
-        }
-
-        Vector2 input = GetInput(keyboard, cameraRotationScript.CurrentSide);
+        Vector2 input = GetInput(cameraRotationScript.CurrentSide);
 
         _velocity = Vector2.Lerp(
             _velocity + input * rotationSpeed * Time.fixedDeltaTime,
@@ -63,8 +53,11 @@ public sealed class RotateWithButtons : MonoBehaviour
             ballRigidbody.AddForce(-transform.up * extraGravity, ForceMode.Acceleration);
     }
 
-    private static Vector2 GetInput(Keyboard keyboard, CameraRotation.CameraSide side)
+    private static Vector2 GetInput(CameraRotation.CameraSide side)
     {
+        Keyboard keyboard = Keyboard.current;
+        if (keyboard == null) return Vector2.zero;
+
         bool w = keyboard.wKey.isPressed;
         bool a = keyboard.aKey.isPressed;
         bool s = keyboard.sKey.isPressed;
