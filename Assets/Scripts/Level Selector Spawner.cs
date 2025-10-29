@@ -3,7 +3,6 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using TMPro;
 
 [DisallowMultipleComponent]
 public sealed class LevelSelect : MonoBehaviour
@@ -21,6 +20,11 @@ public sealed class LevelSelect : MonoBehaviour
     [SerializeField] private Transform? contentParent;
     [SerializeField] private LevelInfo[] levels = Array.Empty<LevelInfo>();
 
+    [Header("Stars")]
+    [SerializeField] private Sprite? starSprite; // используется в prefab
+    [SerializeField] private Color activeColor = Color.white;
+    [SerializeField] private Color inactiveColor = Color.black;
+
     private void Start()
     {
         if (buttonPrefab == null || contentParent == null || levels.Length == 0)
@@ -28,25 +32,51 @@ public sealed class LevelSelect : MonoBehaviour
 
         foreach (var lvl in levels)
         {
-            if (buttonPrefab == null || contentParent == null)
-                continue;
-
             var btnObj = Instantiate(buttonPrefab, contentParent);
-            var text = btnObj.GetComponentInChildren<TMP_Text>();
+
+            // Название уровня
+            var text = btnObj.GetComponentInChildren<TMPro.TMP_Text>();
             if (text != null)
-            {
                 text.text = lvl.displayName;
-                if (isLevelSelectScene && lvl.showStars)
+
+            // Звезды
+            if (isLevelSelectScene && lvl.showStars)
+            {
+                int starsEarned = 0;
+                if (GameSaveManager.Instance?.data?.levels != null)
                 {
-                    int stars = 0;
-                    if (GameSaveManager.Instance?.data?.levels != null)
+                    starsEarned = GameSaveManager.Instance.data.levels
+                        .Find(l => l.sceneName == lvl.sceneName)?.stars ?? 0;
+                }
+
+                for (int i = 1; i <= 3; i++)
+                {
+                    Transform? starTransform = btnObj.transform.Find($"Star{i}");
+                    if (starTransform != null)
                     {
-                        stars = GameSaveManager.Instance.data.levels.Find(l => l.sceneName == lvl.sceneName)?.stars ?? 0;
+                        var img = starTransform.GetComponent<Image>();
+                        if (img != null)
+                        {
+                            img.color = i <= starsEarned ? activeColor : inactiveColor;
+                        }
+                        starTransform.gameObject.SetActive(true);
                     }
-                    text.text += $"\nЗвезды: {stars}/3";
+                }
+            }
+            else
+            {
+                // Если ShowStars выключен — полностью скрываем/удаляем объекты звезд
+                for (int i = 1; i <= 3; i++)
+                {
+                    Transform? starTransform = btnObj.transform.Find($"Star{i}");
+                    if (starTransform != null)
+                    {
+                        starTransform.gameObject.SetActive(false);
+                    }
                 }
             }
 
+            // Кнопка запуска сцены
             var btn = btnObj.GetComponent<Button>();
             if (btn != null)
             {

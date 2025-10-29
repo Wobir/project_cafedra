@@ -7,6 +7,9 @@ public class SkinSliderUI : MonoBehaviour
     [SerializeField] private Transform contentParent;
     [SerializeField] private GameObject skinItemPrefab;
 
+    [SerializeField] private Color normalColor = Color.white;
+    [SerializeField] private Color selectedColor = new Color(0.75f, 0.75f, 0.75f, 1f); // немного темнее
+
     private void Start()
     {
         if (contentParent == null || skinItemPrefab == null || SkinManager.Instance == null) return;
@@ -14,6 +17,7 @@ public class SkinSliderUI : MonoBehaviour
         PopulateSlider();
         SkinManager.Instance.LoadSelectedSkin();
         SkinManager.Instance.SelectSkin(SkinManager.Instance.SelectedSkinIndex);
+        UpdateButtonStates();
     }
 
     private void PopulateSlider()
@@ -38,6 +42,7 @@ public class SkinSliderUI : MonoBehaviour
                 var sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
                 preview.sprite = sprite;
             }
+
             var lockIcon = item.transform.Find("LockIcon")?.gameObject;
             if (lockIcon != null)
             {
@@ -57,7 +62,9 @@ public class SkinSliderUI : MonoBehaviour
             }
 
             var button = item.GetComponent<Button>() ?? item.GetComponentInChildren<Button>();
-            if (button == null) continue;
+            var buttonText = item.GetComponentInChildren<TMP_Text>();
+
+            if (button == null || buttonText == null) continue;
 
             int index = i;
             button.onClick.RemoveAllListeners();
@@ -66,8 +73,32 @@ public class SkinSliderUI : MonoBehaviour
                 SkinManager.Instance.RecheckUnlocks();
                 var selected = SkinManager.Instance.Skins[index];
                 if (!selected.Unlocked) return;
+
                 SkinManager.Instance.SelectSkin(index);
+                UpdateButtonStates();
             });
+        }
+
+        UpdateButtonStates();
+    }
+
+    private void UpdateButtonStates()
+    {
+        int selectedIndex = SkinManager.Instance.SelectedSkinIndex;
+
+        for (int i = 0; i < contentParent.childCount; i++)
+        {
+            var item = contentParent.GetChild(i);
+            var button = item.GetComponent<Button>() ?? item.GetComponentInChildren<Button>();
+            var buttonText = item.GetComponentInChildren<TMP_Text>();
+            var buttonImage = button?.GetComponent<Image>();
+
+            if (button == null || buttonText == null || buttonImage == null) continue;
+
+            bool isSelected = i == selectedIndex;
+
+            buttonText.text = isSelected ? "Выбрано" : "Выбрать";
+            buttonImage.color = isSelected ? selectedColor : normalColor;
         }
     }
 }

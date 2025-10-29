@@ -655,6 +655,7 @@ MonoBehaviour:
   - sceneName: WardRobe
     displayName: "\u0421\u0442\u0438\u043B\u044C \u0448\u0430\u0440\u0438\u043A\u0430"
     showStars: 1
+  starSprite: {fileID: 21300000, guid: 9ada4429e56622caf91234f6ff1a75cc, type: 3}
 --- !u!4 &1227880872
 Transform:
   m_ObjectHideFlags: 0
@@ -844,7 +845,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
       propertyPath: skins.Array.size
-      value: 3
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
       propertyPath: skins.Array.data[0].Name
@@ -856,6 +857,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
       propertyPath: skins.Array.data[2].Name
+      value: Checker
+      objectReference: {fileID: 0}
+    - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
+      propertyPath: skins.Array.data[3].Name
+      value: RBChecker
+      objectReference: {fileID: 0}
+    - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
+      propertyPath: skins.Array.data[4].Name
+      value: Bee
+      objectReference: {fileID: 0}
+    - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
+      propertyPath: skins.Array.data[5].Name
       value: Golden
       objectReference: {fileID: 0}
     - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
@@ -873,11 +886,23 @@ PrefabInstance:
     - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
       propertyPath: skins.Array.data[2].Material
       value: 
-      objectReference: {fileID: 2100000, guid: 5f12c0b8ae107c46e9b20be06bfb665e, type: 2}
+      objectReference: {fileID: 2100000, guid: bcf182497a3eef5c4a275ba583704c2e, type: 2}
     - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
       propertyPath: skins.Array.data[2].Unlocked
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
+      propertyPath: skins.Array.data[3].Material
+      value: 
+      objectReference: {fileID: 2100000, guid: eb229737c1cc66fc5adcb10b079023d2, type: 2}
+    - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
+      propertyPath: skins.Array.data[4].Material
+      value: 
+      objectReference: {fileID: 2100000, guid: b3f329d3c489e54cd9af24f0a73c37ab, type: 2}
+    - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
+      propertyPath: skins.Array.data[5].Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 5f12c0b8ae107c46e9b20be06bfb665e, type: 2}
     - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
       propertyPath: skins.Array.data[1].RequiredStars
       value: 4
@@ -888,6 +913,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
       propertyPath: skins.Array.data[2].RequiredStars
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
+      propertyPath: skins.Array.data[3].RequiredStars
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
+      propertyPath: skins.Array.data[4].RequiredStars
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
+      propertyPath: skins.Array.data[5].RequiredStars
       value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
@@ -895,11 +932,31 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
+      propertyPath: skins.Array.data[2].RequiredBonuses
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
+      propertyPath: skins.Array.data[4].RequiredBonuses
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
       propertyPath: skins.Array.data[1].LockRequirementSprite
       value: 
       objectReference: {fileID: 21300000, guid: 9ada4429e56622caf91234f6ff1a75cc, type: 3}
     - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
       propertyPath: skins.Array.data[2].LockRequirementSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: fc7ad6f062c2c565faca0b92800953ce, type: 3}
+    - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
+      propertyPath: skins.Array.data[3].LockRequirementSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9ada4429e56622caf91234f6ff1a75cc, type: 3}
+    - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
+      propertyPath: skins.Array.data[4].LockRequirementSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: fc7ad6f062c2c565faca0b92800953ce, type: 3}
+    - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
+      propertyPath: skins.Array.data[5].LockRequirementSprite
       value: 
       objectReference: {fileID: 21300000, guid: 9ada4429e56622caf91234f6ff1a75cc, type: 3}
     - target: {fileID: 4627713061678532526, guid: 10294e9ad4f1fcb0da28e41f72588ebf, type: 3}
