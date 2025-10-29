@@ -13,8 +13,10 @@ public sealed class LevelSelect : MonoBehaviour
     {
         public string sceneName = string.Empty;
         public string displayName = string.Empty;
+        public bool showStars = true;
     }
 
+    [SerializeField] private bool isLevelSelectScene = true;
     [SerializeField] private GameObject? buttonPrefab;
     [SerializeField] private Transform? contentParent;
     [SerializeField] private LevelInfo[] levels = Array.Empty<LevelInfo>();
@@ -22,28 +24,40 @@ public sealed class LevelSelect : MonoBehaviour
     private void Start()
     {
         if (buttonPrefab == null || contentParent == null || levels.Length == 0)
-        {
-            Debug.LogError("LevelSelect: Настройки пусты");
             return;
-        }
 
         foreach (var lvl in levels)
         {
+            if (buttonPrefab == null || contentParent == null)
+                continue;
+
             var btnObj = Instantiate(buttonPrefab, contentParent);
             var text = btnObj.GetComponentInChildren<TMP_Text>();
-            if (text != null) text.text = lvl.displayName;
+            if (text != null)
+            {
+                text.text = lvl.displayName;
+                if (isLevelSelectScene && lvl.showStars)
+                {
+                    int stars = 0;
+                    if (GameSaveManager.Instance?.data?.levels != null)
+                    {
+                        stars = GameSaveManager.Instance.data.levels.Find(l => l.sceneName == lvl.sceneName)?.stars ?? 0;
+                    }
+                    text.text += $"\nЗвезды: {stars}/3";
+                }
+            }
+
             var btn = btnObj.GetComponent<Button>();
             if (btn != null)
             {
-                string captured = lvl.sceneName;
-                btn.onClick.AddListener(() => LoadLevel(captured));
+                string scene = lvl.sceneName;
+                btn.onClick.AddListener(() =>
+                {
+                    if (!string.IsNullOrWhiteSpace(scene))
+                        SceneManager.LoadScene(scene);
+                });
             }
         }
-    }
-
-    private static void LoadLevel(string name)
-    {
-        if (!string.IsNullOrWhiteSpace(name)) SceneManager.LoadScene(name);
     }
 
     public void SetLevels(LevelInfo[] lvls) => levels = lvls ?? Array.Empty<LevelInfo>();

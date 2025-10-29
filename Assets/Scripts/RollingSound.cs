@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class BallRolling : MonoBehaviour
 {
     [SerializeField] private AudioSource rollingSource;
@@ -23,14 +24,11 @@ public class BallRolling : MonoBehaviour
     private void Update()
     {
         float angularSpeed = _rigidbody.angularVelocity.magnitude;
+        float targetVolume = 0f;
 
-        if (angularSpeed < minRollSpeed)
-        {
-            rollingSource.volume = 0f;
-        }
-        else
-        {
-            rollingSource.volume = Mathf.Clamp(angularSpeed * volumeMultiplier, minRollVolume, maxRollVolume);
-        }
+        if (angularSpeed >= minRollSpeed)
+            targetVolume = Mathf.Clamp(angularSpeed * volumeMultiplier, minRollVolume, maxRollVolume);
+
+        rollingSource.volume = targetVolume * (GameSaveManager.Instance?.GetSfxVolume() ?? 1f);
     }
 }

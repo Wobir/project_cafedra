@@ -10,7 +10,10 @@ public class PauseManager : MonoBehaviour
     [SerializeField] private string returnScene;
     [SerializeField] private InputActionReference cancelAction;
     [SerializeField] private CollectBonus playerScore;
-    [SerializeField] private AudioSource[] audioSourcesToPause;
+
+    [Header("Звуки")]
+    [SerializeField] private GameObject audioRoot;
+    private AudioSource[] audioSources;
 
     private bool isPaused;
     private float levelTime;
@@ -24,6 +27,11 @@ public class PauseManager : MonoBehaviour
             if (playerScore == null)
                 Debug.LogError("CollectBonus not found in the scene!");
         }
+
+        if (audioRoot != null)
+            audioSources = audioRoot.GetComponentsInChildren<AudioSource>(true);
+        else
+            audioSources = System.Array.Empty<AudioSource>();
 
         maxBonus = GameObject.FindGameObjectsWithTag("Bonus").Length;
     }
@@ -59,20 +67,16 @@ public class PauseManager : MonoBehaviour
         if (statsText != null && playerScore != null)
             statsText.text = $"Кристалы: {playerScore.Score}/{maxBonus}\nВремя: {FormatTime(levelTime)}";
 
-        if (audioSourcesToPause != null)
+        foreach (var audioSource in audioSources)
         {
-            foreach (var audioSource in audioSourcesToPause)
-            {
-                if (audioSource == null) continue;
-                if (isPaused && audioSource.isPlaying)
-                    audioSource.Pause();
-                else if (!isPaused)
-                    audioSource.UnPause();
-            }
+            if (audioSource == null) continue;
+            if (isPaused && audioSource.isPlaying)
+                audioSource.Pause();
+            else if (!isPaused)
+                audioSource.UnPause();
         }
 
         Time.timeScale = isPaused ? 0f : 1f;
-
         pauseMenu?.SetActive(isPaused);
     }
 

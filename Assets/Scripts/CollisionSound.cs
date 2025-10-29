@@ -28,7 +28,9 @@ public class BallCollision : MonoBehaviour
 
         if (deltaV > impactThreshold && Time.time - _lastImpactTime > minTimeBetweenImpacts)
         {
-            fxSource.PlayOneShot(collisionSound);
+            if (fxSource && collisionSound)
+                fxSource.PlayOneShot(collisionSound, GameSaveManager.Instance?.GetSfxVolume() ?? 1f);
+
             _lastImpactTime = Time.time;
             _impactEndTime = Time.time + postImpactDelay;
         }
@@ -36,8 +38,5 @@ public class BallCollision : MonoBehaviour
         _previousVelocity = velocity;
     }
 
-    public bool IsInImpactDelay()
-    {
-        return Time.time < _impactEndTime;
-    }
+    public bool IsInImpactDelay() => Time.time < _impactEndTime;
 }

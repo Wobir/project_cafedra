@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Crystal
   - Bonus
+  - MusicSlider
+  - SFXSlider
+  - Door
   layers:
   - Default
   - TransparentFX

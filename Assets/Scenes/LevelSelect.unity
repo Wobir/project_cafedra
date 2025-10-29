@@ -216,63 +216,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1001 &141603369
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5886010236691880639, guid: e3d5381d6081fb2528c6020b2bdfbb47, type: 3}
-      propertyPath: m_Name
-      value: BGMusic
-      objectReference: {fileID: 0}
-    - target: {fileID: 7631091342081891953, guid: e3d5381d6081fb2528c6020b2bdfbb47, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 674.20715
-      objectReference: {fileID: 0}
-    - target: {fileID: 7631091342081891953, guid: e3d5381d6081fb2528c6020b2bdfbb47, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7631091342081891953, guid: e3d5381d6081fb2528c6020b2bdfbb47, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -150.15393
-      objectReference: {fileID: 0}
-    - target: {fileID: 7631091342081891953, guid: e3d5381d6081fb2528c6020b2bdfbb47, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7631091342081891953, guid: e3d5381d6081fb2528c6020b2bdfbb47, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7631091342081891953, guid: e3d5381d6081fb2528c6020b2bdfbb47, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7631091342081891953, guid: e3d5381d6081fb2528c6020b2bdfbb47, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7631091342081891953, guid: e3d5381d6081fb2528c6020b2bdfbb47, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7631091342081891953, guid: e3d5381d6081fb2528c6020b2bdfbb47, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7631091342081891953, guid: e3d5381d6081fb2528c6020b2bdfbb47, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: e3d5381d6081fb2528c6020b2bdfbb47, type: 3}
 --- !u!1 &788518846
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,15 +470,9 @@ MonoBehaviour:
   m_ShowToolkit: 0
   m_ShowCustomSorter: 0
   breakBeforeColorGrading: 0
-  m_BeforeTransparentBundles:
-  - assemblyQualifiedName: EdgeDetect_BeforeTransparent, AGM.EdgeDetection, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  m_BeforeStackBundles:
-  - assemblyQualifiedName: EdgeDetect_BeforeStack, AGM.EdgeDetection, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  m_AfterStackBundles:
-  - assemblyQualifiedName: EdgeDetect_AfterStack, AGM.EdgeDetection, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
+  m_BeforeTransparentBundles: []
+  m_BeforeStackBundles: []
+  m_AfterStackBundles: []
 --- !u!1 &1187035556
 GameObject:
   m_ObjectHideFlags: 0
@@ -644,33 +581,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890cd8e87d1ed7fe5b9bf2dd5dd9b9d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelect
+  isLevelSelectScene: 1
   buttonPrefab: {fileID: 4591378803976157219, guid: 7cd9a56467e62f8588f87d05829d8cce, type: 3}
   contentParent: {fileID: 2062961030}
   levels:
   - sceneName: Tutorial
     displayName: "\u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435"
+    showStars: 1
   - sceneName: level 1
     displayName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 1"
+    showStars: 1
   - sceneName: level 2
     displayName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 2"
+    showStars: 1
   - sceneName: level 3
     displayName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 3"
-  - sceneName: 
+    showStars: 1
+  - sceneName: level 4
     displayName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 4"
-  - sceneName: 
+    showStars: 1
+  - sceneName: level 5
     displayName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 5"
-  - sceneName: 
+    showStars: 1
+  - sceneName: level 6
     displayName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 6"
-  - sceneName: 
+    showStars: 1
+  - sceneName: level 7
     displayName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 7"
-  - sceneName: 
+    showStars: 1
+  - sceneName: level 8
     displayName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 8"
-  - sceneName: 
+    showStars: 1
+  - sceneName: level 9
     displayName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 9"
-  - sceneName: 
+    showStars: 1
+  - sceneName: Level 10
     displayName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 10"
+    showStars: 1
   - sceneName: MainMenu
     displayName: "\u041C\u0435\u043D\u044E"
+    showStars: 0
 --- !u!4 &1227880872
 Transform:
   m_ObjectHideFlags: 0
@@ -713,7 +663,7 @@ RectTransform:
   m_GameObject: {fileID: 1348581112}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 788518847}
@@ -721,7 +671,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -19, y: 0}
-  m_SizeDelta: {x: 1024, y: 512}
+  m_SizeDelta: {x: 2048, y: 1280}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1348581114
 MonoBehaviour:
@@ -785,7 +735,7 @@ RectTransform:
   m_GameObject: {fileID: 1716687343}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 14, y: 8, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 788518847}
@@ -793,7 +743,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 1400, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1716687345
 MonoBehaviour:
@@ -954,4 +904,3 @@ SceneRoots:
   - {fileID: 788518847}
   - {fileID: 1187035559}
   - {fileID: 1227880872}
-  - {fileID: 141603369}
