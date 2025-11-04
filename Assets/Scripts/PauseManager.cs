@@ -63,9 +63,20 @@ public class PauseManager : MonoBehaviour
     private void OnPause(InputAction.CallbackContext context)
     {
         isPaused = !isPaused;
+        ApplyPauseState();
+    }
 
+    public void Unpause()
+    {
+        if (!isPaused) return;
+        isPaused = false;
+        ApplyPauseState();
+    }
+
+    private void ApplyPauseState()
+    {
         if (statsText != null && playerScore != null)
-            statsText.text = $"Кристалы: {playerScore.Score}/{maxBonus}\nВремя: {FormatTime(levelTime)}";
+            statsText.text = $"Кристаллы: {playerScore.Score}/{maxBonus}\nВремя: {FormatTime(levelTime)}";
 
         foreach (var audioSource in audioSources)
         {

@@ -9,6 +9,7 @@ TagManager:
   - MusicSlider
   - SFXSlider
   - Door
+  - Secret
   layers:
   - Default
   - TransparentFX

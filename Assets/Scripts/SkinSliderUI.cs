@@ -8,52 +8,64 @@ public class SkinSliderUI : MonoBehaviour
     [SerializeField] private GameObject skinItemPrefab;
 
     [SerializeField] private Color normalColor = Color.white;
-    [SerializeField] private Color selectedColor = new Color(0.75f, 0.75f, 0.75f, 1f); // немного темнее
+    [SerializeField] private Color selectedColor = new(0.75f, 0.75f, 0.75f, 1f);
 
     private void Start()
     {
         if (contentParent == null || skinItemPrefab == null || SkinManager.Instance == null) return;
 
         PopulateSlider();
-        SkinManager.Instance.LoadSelectedSkin();
-        SkinManager.Instance.SelectSkin(SkinManager.Instance.SelectedSkinIndex);
+        var manager = SkinManager.Instance;
+        manager.LoadSelectedSkin();
+        manager.SelectSkin(manager.SelectedSkinIndex);
         UpdateButtonStates();
     }
 
     private void PopulateSlider()
     {
-        var skins = SkinManager.Instance.Skins;
+        var manager = SkinManager.Instance;
+        var skins = manager.Skins;
         if (skins.Count == 0) return;
 
-        foreach (Transform child in contentParent) Destroy(child.gameObject);
+        for (int i = contentParent.childCount - 1; i >= 0; i--)
+            Destroy(contentParent.GetChild(i).gameObject);
 
         for (int i = 0; i < skins.Count; i++)
         {
             var skin = skins[i];
             var item = Instantiate(skinItemPrefab, contentParent);
-            var rt = item.GetComponent<RectTransform>();
-            rt.localScale = Vector3.one;
-            rt.anchoredPosition = Vector2.zero;
-
-            var preview = item.transform.Find("Preview")?.GetComponent<Image>();
-            if (preview != null && skin.Material != null)
+            if (item.TryGetComponent<RectTransform>(out var rt))
             {
-                var tex = SkinPreviewRenderer.Instance.GeneratePreview(skin.Material);
-                var sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
-                preview.sprite = sprite;
+                rt.localScale = Vector3.one;
+                rt.anchoredPosition = Vector2.zero;
             }
 
-            var lockIcon = item.transform.Find("LockIcon")?.gameObject;
-            if (lockIcon != null)
+            var previewTransform = item.transform.Find("Preview");
+            if (previewTransform != null)
             {
-                lockIcon.SetActive(!skin.Unlocked);
+                var preview = previewTransform.GetComponent<Image>();
+                if (preview != null && skin.Material != null && SkinPreviewRenderer.Instance != null)
+                {
+                    var tex = SkinPreviewRenderer.Instance.GeneratePreview(skin.Material);
+                    if (tex != null)
+                    {
+                        var sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+                        preview.sprite = sprite;
+                    }
+                }
+            }
 
-                var currencyImage = lockIcon.transform.Find("Currency")?.GetComponent<Image>();
-                var currencyAmount = lockIcon.transform.Find("Amount")?.GetComponent<TMP_Text>();
+            var lockTransform = item.transform.Find("LockIcon");
+            if (lockTransform != null)
+            {
+                var lockObj = lockTransform.gameObject;
+                lockObj.SetActive(!skin.Unlocked);
 
-                if (currencyImage != null)
+                var currencyImage = lockTransform.Find("Currency")?.GetComponent<Image>();
+                if (currencyImage != null && skin.LockRequirementSprite != null)
                     currencyImage.sprite = skin.LockRequirementSprite;
 
+                var currencyAmount = lockTransform.Find("Amount")?.GetComponent<TMP_Text>();
                 if (currencyAmount != null)
                 {
                     int amount = skin.RequiredStars > 0 ? skin.RequiredStars : skin.RequiredBonuses;
@@ -61,20 +73,23 @@ public class SkinSliderUI : MonoBehaviour
                 }
             }
 
-            var button = item.GetComponent<Button>() ?? item.GetComponentInChildren<Button>();
-            var buttonText = item.GetComponentInChildren<TMP_Text>();
+            var button = item.GetComponent<Button>();
+            if (button == null)
+                button = item.GetComponentInChildren<Button>();
 
+            var buttonText = item.GetComponentInChildren<TMP_Text>();
             if (button == null || buttonText == null) continue;
 
             int index = i;
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() =>
             {
-                SkinManager.Instance.RecheckUnlocks();
-                var selected = SkinManager.Instance.Skins[index];
+                var mgr = SkinManager.Instance;
+                if (mgr == null) return;
+                mgr.RecheckUnlocks();
+                var selected = mgr.Skins[index];
                 if (!selected.Unlocked) return;
-
-                SkinManager.Instance.SelectSkin(index);
+                mgr.SelectSkin(index);
                 UpdateButtonStates();
             });
         }
@@ -84,19 +99,24 @@ public class SkinSliderUI : MonoBehaviour
 
     private void UpdateButtonStates()
     {
-        int selectedIndex = SkinManager.Instance.SelectedSkinIndex;
+        var manager = SkinManager.Instance;
+        if (manager == null) return;
+
+        int selectedIndex = manager.SelectedSkinIndex;
 
         for (int i = 0; i < contentParent.childCount; i++)
         {
             var item = contentParent.GetChild(i);
-            var button = item.GetComponent<Button>() ?? item.GetComponentInChildren<Button>();
+            var button = item.GetComponent<Button>();
+            if (button == null)
+                button = item.GetComponentInChildren<Button>();
+
             var buttonText = item.GetComponentInChildren<TMP_Text>();
-            var buttonImage = button?.GetComponent<Image>();
+            var buttonImage = button != null ? button.GetComponent<Image>() : null;
 
             if (button == null || buttonText == null || buttonImage == null) continue;
 
             bool isSelected = i == selectedIndex;
-
             buttonText.text = isSelected ? "Выбрано" : "Выбрать";
             buttonImage.color = isSelected ? selectedColor : normalColor;
         }

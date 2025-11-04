@@ -21,7 +21,7 @@ public sealed class LevelSelect : MonoBehaviour
     [SerializeField] private LevelInfo[] levels = Array.Empty<LevelInfo>();
 
     [Header("Stars")]
-    [SerializeField] private Sprite? starSprite; // используется в prefab
+    [SerializeField] private Sprite? starSprite;
     [SerializeField] private Color activeColor = Color.white;
     [SerializeField] private Color inactiveColor = Color.black;
 
@@ -30,65 +30,52 @@ public sealed class LevelSelect : MonoBehaviour
         if (buttonPrefab == null || contentParent == null || levels.Length == 0)
             return;
 
+        var savedLevels = GameSaveManager.Instance != null && GameSaveManager.Instance.data != null
+            ? GameSaveManager.Instance.data.levels
+            : null;
+
         foreach (var lvl in levels)
         {
             var btnObj = Instantiate(buttonPrefab, contentParent);
 
-            // Название уровня
             var text = btnObj.GetComponentInChildren<TMPro.TMP_Text>();
             if (text != null)
                 text.text = lvl.displayName;
 
-            // Звезды
-            if (isLevelSelectScene && lvl.showStars)
+            int starsEarned = 0;
+            if (isLevelSelectScene && lvl.showStars && savedLevels != null)
             {
-                int starsEarned = 0;
-                if (GameSaveManager.Instance?.data?.levels != null)
-                {
-                    starsEarned = GameSaveManager.Instance.data.levels
-                        .Find(l => l.sceneName == lvl.sceneName)?.stars ?? 0;
-                }
+                var levelData = savedLevels.Find(l => l.sceneName == lvl.sceneName);
+                starsEarned = levelData != null ? levelData.stars : 0;
+            }
 
-                for (int i = 1; i <= 3; i++)
+            for (int i = 1; i <= 3; i++)
+            {
+                Transform? starTransform = btnObj.transform.Find($"Star{i}");
+                if (starTransform != null)
                 {
-                    Transform? starTransform = btnObj.transform.Find($"Star{i}");
-                    if (starTransform != null)
+                    if (lvl.showStars && isLevelSelectScene)
                     {
                         var img = starTransform.GetComponent<Image>();
                         if (img != null)
-                        {
                             img.color = i <= starsEarned ? activeColor : inactiveColor;
-                        }
                         starTransform.gameObject.SetActive(true);
                     }
-                }
-            }
-            else
-            {
-                // Если ShowStars выключен — полностью скрываем/удаляем объекты звезд
-                for (int i = 1; i <= 3; i++)
-                {
-                    Transform? starTransform = btnObj.transform.Find($"Star{i}");
-                    if (starTransform != null)
+                    else
                     {
                         starTransform.gameObject.SetActive(false);
                     }
                 }
             }
 
-            // Кнопка запуска сцены
-            var btn = btnObj.GetComponent<Button>();
-            if (btn != null)
+            if (btnObj.TryGetComponent<Button>(out var btn))
             {
                 string scene = lvl.sceneName;
-                btn.onClick.AddListener(() =>
-                {
-                    if (!string.IsNullOrWhiteSpace(scene))
-                        SceneManager.LoadScene(scene);
-                });
+                if (!string.IsNullOrWhiteSpace(scene))
+                    btn.onClick.AddListener(() => SceneManager.LoadScene(scene));
             }
         }
     }
 
-    public void SetLevels(LevelInfo[] lvls) => levels = lvls ?? Array.Empty<LevelInfo>();
+    public void SetLevels(LevelInfo[] lvls) => levels = lvls != null ? lvls : Array.Empty<LevelInfo>();
 }

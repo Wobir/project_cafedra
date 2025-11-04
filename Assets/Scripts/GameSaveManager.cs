@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-#if YANDEX_GAMES
-using YG;
-#endif
-
 [Serializable]
 public class LevelProgress
 {
@@ -19,8 +15,8 @@ public class LevelProgress
 [Serializable]
 public class GameSettings
 {
-    public float musicVolume = 1f;
-    public float sfxVolume = 1f;
+    public float musicVolume = 0.6f;
+    public float sfxVolume = 0.6f;
 }
 
 [Serializable]
@@ -115,7 +111,7 @@ public class GameSaveManager : MonoBehaviour
         SaveProgress();
         SkinManager.Instance?.RecheckUnlocks();
 
-        var progressUI = UnityEngine.Object.FindAnyObjectByType<ProgressDisplay>();
+        var progressUI = FindAnyObjectByType<ProgressDisplay>();
         progressUI?.UpdateText();
     }
 
@@ -153,7 +149,7 @@ public class GameSaveManager : MonoBehaviour
         SkinManager.Instance?.RecheckUnlocks();
         SkinManager.Instance?.LoadSelectedSkin();
 
-        var progressUI = UnityEngine.Object.FindAnyObjectByType<ProgressDisplay>();
+        var progressUI = FindAnyObjectByType<ProgressDisplay>();
         progressUI?.UpdateText();
     }
 }

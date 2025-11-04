@@ -52,7 +52,7 @@ public class SkinPreviewRenderer : MonoBehaviour
             return Texture2D.blackTexture;
 
         // создаём временный объект под этот конкретный рендер
-        GameObject tempGO = new GameObject("SkinPreviewTemp") { hideFlags = HideFlags.HideAndDontSave };
+        GameObject tempGO = new("SkinPreviewTemp") { hideFlags = HideFlags.HideAndDontSave };
         MeshFilter meshFilter = tempGO.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = tempGO.AddComponent<MeshRenderer>();
 
@@ -62,7 +62,7 @@ public class SkinPreviewRenderer : MonoBehaviour
         tempGO.transform.rotation = Quaternion.identity;
 
         // создаём текстуру для рендера
-        RenderTexture rt = new RenderTexture(textureSize, textureSize, 24, RenderTextureFormat.ARGB32);
+        RenderTexture rt = new(textureSize, textureSize, 24, RenderTextureFormat.ARGB32);
         RenderTexture currentRT = RenderTexture.active;
 
         previewCamera.targetTexture = rt;
@@ -73,7 +73,7 @@ public class SkinPreviewRenderer : MonoBehaviour
         previewCamera.Render();
 
         // создаём финальную Texture2D
-        Texture2D previewTex = new Texture2D(textureSize, textureSize, TextureFormat.ARGB32, false);
+        Texture2D previewTex = new(textureSize, textureSize, TextureFormat.ARGB32, false);
         previewTex.ReadPixels(new Rect(0, 0, textureSize, textureSize), 0, 0);
         previewTex.Apply();
 

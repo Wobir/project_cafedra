@@ -38,7 +38,7 @@ public sealed class RotateWithButtons : MonoBehaviour
         Vector2 input = GetInput(cameraRotationScript.CurrentSide);
 
         _velocity = Vector2.Lerp(
-            _velocity + input * rotationSpeed * Time.fixedDeltaTime,
+            _velocity + rotationSpeed * Time.fixedDeltaTime * input,
             Vector2.zero,
             damping * Time.fixedDeltaTime
         );
