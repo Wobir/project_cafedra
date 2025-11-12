@@ -27,9 +27,8 @@ public sealed class Portal : MonoBehaviour
         Rigidbody? rb=obj.attachedRigidbody;
         Vector3 localPos=transform.InverseTransformPoint(t.position);
         Quaternion localRot=Quaternion.Inverse(transform.rotation)*t.rotation;
-        t.position=linkedPortal!.transform.TransformPoint(localPos);
-        t.rotation=linkedPortal.transform.rotation*localRot;
-        if(rb!=null) rb.linearVelocity=linkedPortal.transform.TransformDirection(transform.InverseTransformDirection(rb.linearVelocity));
+        t.SetPositionAndRotation(linkedPortal!.transform.TransformPoint(localPos), linkedPortal.transform.rotation*localRot);
+        if (rb!=null) rb.linearVelocity=linkedPortal.transform.TransformDirection(transform.InverseTransformDirection(rb.linearVelocity));
     }
 
     private IEnumerator CooldownRoutine()
