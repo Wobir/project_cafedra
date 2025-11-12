@@ -36,10 +36,9 @@ public class SkinManager : MonoBehaviour
 
         foreach (var skin in skins)
         {
-            bool canUnlock = (stars >= skin.RequiredStars && skin.RequiredStars > 0)
+            skin.Unlocked = (stars >= skin.RequiredStars && skin.RequiredStars > 0)
                           || (bonuses >= skin.RequiredBonuses && skin.RequiredBonuses > 0)
                           || (skin.RequiredStars == 0 && skin.RequiredBonuses == 0);
-            skin.Unlocked = canUnlock;
         }
     }
 
@@ -47,8 +46,8 @@ public class SkinManager : MonoBehaviour
     {
         if (index < 0 || index >= skins.Count) return;
         if (!skins[index].Unlocked) return;
+
         selectedSkinIndex = index;
-        SaveSelectedSkin();
         GameSaveManager.Instance?.UpdateSelectedSkin(index);
     }
 
@@ -56,12 +55,6 @@ public class SkinManager : MonoBehaviour
     {
         if (skins == null || skins.Count == 0) return null;
         return skins[selectedSkinIndex].Material;
-    }
-
-    public void SaveSelectedSkin()
-    {
-        PlayerPrefs.SetInt("SelectedSkinIndex", selectedSkinIndex);
-        PlayerPrefs.Save();
     }
 
     public void LoadSelectedSkin()

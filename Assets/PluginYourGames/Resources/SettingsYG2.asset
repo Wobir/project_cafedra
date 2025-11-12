@@ -12,8 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efa747916aa66674d96ea40ca8a480b2, type: 3}
   m_Name: SettingsYG2
   m_EditorClassIdentifier: Assembly-CSharp::YG.InfoYG
+  Authorization:
+    playerPhotoSize: 1
+    authorized: 1
+    playerName: Player current
+    uniqueID: 000
+    playerPhoto: demo image
+    payingStatus: 0
   Localization:
     setLanguageMod: 1
+  Storage:
+    saveLocal: 1
+    saveCloud: 1
+    flush: 1
   Basic:
     platform: {fileID: 11400000, guid: c2a303d33a9fd394bae4c4b88b9a1c44, type: 2}
     autoApplySettings: 1
@@ -22,7 +33,7 @@ MonoBehaviour:
     autoGRA: 1
     logInEditor: 1
     archivingBuild: 1
-    syncInitSDK: 0
+    syncInitSDK: 1
     loadSceneIfSDKLate: 0
     loadSceneIndex: 0
     simulationLoadScene: 0
@@ -66,6 +77,8 @@ MonoBehaviour:
   platformInfo:
     ownHost: 0
   platformToggles:
+    saveLocal: 0
+    saveCloud: 0
     autoPauseGame: 0
     selectWebGLTemplate: 1
     runInBackground: 1

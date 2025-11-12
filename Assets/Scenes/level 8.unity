@@ -693,6 +693,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Menu
       objectReference: {fileID: 0}
+    - target: {fileID: 5117397161862499026, guid: 29288fc754e2234d6ad470cc56b725eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1810481902877440429}
+    - target: {fileID: 5117397161862499026, guid: 29288fc754e2234d6ad470cc56b725eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ReturnToScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 5253048756013635283, guid: 29288fc754e2234d6ad470cc56b725eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1810481902877440429}
+    - target: {fileID: 5253048756013635283, guid: 29288fc754e2234d6ad470cc56b725eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Unpause
+      objectReference: {fileID: 0}
     - target: {fileID: 8590343564152108897, guid: 29288fc754e2234d6ad470cc56b725eb, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1346,6 +1362,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 40efe73eda5c793f8b03079df2b6c946, type: 3}
+--- !u!114 &1810481902877440429 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5040043161249715961, guid: 40efe73eda5c793f8b03079df2b6c946, type: 3}
+  m_PrefabInstance: {fileID: 1810481902877440428}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 543033786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13e64804aa056145084ac13a3f894e15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PauseManager
 --- !u!1001 &2918321566981436645
 PrefabInstance:
   m_ObjectHideFlags: 0

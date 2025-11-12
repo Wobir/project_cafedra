@@ -41,6 +41,7 @@ public class GameSaveManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
@@ -56,14 +57,19 @@ public class GameSaveManager : MonoBehaviour
         var keyboard = Keyboard.current;
         if (keyboard == null) return;
 
-        if (keyboard.cKey.isPressed && keyboard.vKey.isPressed && keyboard.bKey.isPressed)
-            ResetProgress();
+        if (keyboard.cKey != null && keyboard.vKey != null && keyboard.bKey != null)
+        {
+            if (keyboard.cKey.isPressed && keyboard.vKey.isPressed && keyboard.bKey.isPressed)
+                ResetProgress();
+        }
     }
 
+    // Сохранение вызывается только при важных действиях
     public void SaveProgress()
     {
 #if YANDEX_GAMES
         YG2.saves.dataJson = JsonUtility.ToJson(data, true);
+        YG2.saves.selectedSkinIndex = selectedSkinIndex;
         YG2.SaveProgress();
 #else
         PlayerPrefs.SetString("SaveData", JsonUtility.ToJson(data, true));
@@ -77,7 +83,10 @@ public class GameSaveManager : MonoBehaviour
 #if YANDEX_GAMES
         string json = YG2.saves.dataJson;
         if (!string.IsNullOrEmpty(json))
+        {
             data = JsonUtility.FromJson<SaveData>(json);
+            selectedSkinIndex = YG2.saves.selectedSkinIndex;
+        }
 #else
         if (PlayerPrefs.HasKey("SaveData"))
             data = JsonUtility.FromJson<SaveData>(PlayerPrefs.GetString("SaveData"));
@@ -87,6 +96,8 @@ public class GameSaveManager : MonoBehaviour
 
     public void UpdateLevelProgress(string sceneName, int stars, float time, int bonuses)
     {
+        if (string.IsNullOrEmpty(sceneName)) return;
+
         var level = data.levels.Find(l => l.sceneName == sceneName);
         if (level == null)
         {
@@ -102,24 +113,16 @@ public class GameSaveManager : MonoBehaviour
 
         data.totalStars = 0;
         data.totalBonuses = 0;
-        foreach (var lvl in data.levels)
+
+        for (int i = 0; i < data.levels.Count; i++)
         {
-            data.totalStars += lvl.stars;
-            data.totalBonuses += lvl.bonusesCollected;
+            data.totalStars += data.levels[i].stars;
+            data.totalBonuses += data.levels[i].bonusesCollected;
         }
 
+        // Сохраняем только после завершения уровня
         SaveProgress();
         SkinManager.Instance?.RecheckUnlocks();
-
-        var progressUI = FindAnyObjectByType<ProgressDisplay>();
-        progressUI?.UpdateText();
-    }
-
-    public void UpdateSettings(float musicVolume, float sfxVolume)
-    {
-        data.settings.musicVolume = musicVolume;
-        data.settings.sfxVolume = sfxVolume;
-        SaveProgress();
     }
 
     public void UpdateSelectedSkin(int index)
@@ -128,28 +131,23 @@ public class GameSaveManager : MonoBehaviour
         SaveProgress();
     }
 
+    public void UpdateSettings(float musicVolume, float sfxVolume)
+    {
+        data.settings.musicVolume = musicVolume;
+        data.settings.sfxVolume = sfxVolume;
+    }
+
     public int GetSelectedSkinIndex() => selectedSkinIndex;
-    public float GetMusicVolume() => data.settings.musicVolume;
-    public float GetSfxVolume() => data.settings.sfxVolume;
+    public float GetMusicVolume() => data.settings != null ? data.settings.musicVolume : 0.6f;
+    public float GetSfxVolume() => data.settings != null ? data.settings.sfxVolume : 0.6f;
 
     public void ResetProgress()
     {
         data = new SaveData();
         selectedSkinIndex = 0;
 
-#if YANDEX_GAMES
-        YG2.saves.dataJson = JsonUtility.ToJson(data, true);
-        YG2.SaveProgress();
-#else
-        PlayerPrefs.DeleteKey("SaveData");
-        PlayerPrefs.DeleteKey("SelectedSkinIndex");
-        PlayerPrefs.Save();
-#endif
-
+        SaveProgress();
         SkinManager.Instance?.RecheckUnlocks();
         SkinManager.Instance?.LoadSelectedSkin();
-
-        var progressUI = FindAnyObjectByType<ProgressDisplay>();
-        progressUI?.UpdateText();
     }
 }

@@ -3,16 +3,20 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Linq;
+using System.Collections.Generic;
 
 public class BGMusic : MonoBehaviour
 {
     public static BGMusic Instance { get; private set; }
 
+    [Header("Music Settings")]
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioClip menuMusic;
     [SerializeField] private AudioClip levelMusic;
     [SerializeField] private float fadeSpeed = 1f;
     [SerializeField] private string[] menuScenes;
+
+    [Header("UI Tags")]
     [SerializeField] private string musicSliderTag = "MusicSlider";
     [SerializeField] private string sfxSliderTag = "SFXSlider";
     [SerializeField] private string playerTag = "Player";
@@ -22,6 +26,10 @@ public class BGMusic : MonoBehaviour
     private float musicVolume;
     private float sfxVolume;
 
+    private readonly float saveDelay = 1.5f;
+    private float lastChangeTime = -10f;      
+    private bool isSavingScheduled;       
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -29,6 +37,7 @@ public class BGMusic : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -45,9 +54,8 @@ public class BGMusic : MonoBehaviour
             yield return null;
 
         GameSaveManager.Instance.LoadProgress();
-
-        musicVolume = GameSaveManager.Instance != null ? GameSaveManager.Instance.GetMusicVolume() : 0.6f;
-        sfxVolume = GameSaveManager.Instance != null ? GameSaveManager.Instance.GetSfxVolume() : 0.6f;
+        musicVolume = GameSaveManager.Instance.GetMusicVolume();
+        sfxVolume = GameSaveManager.Instance.GetSfxVolume();
 
         if (musicSource != null)
             musicSource.volume = musicVolume;
@@ -63,11 +71,13 @@ public class BGMusic : MonoBehaviour
     {
         bool isMenu = menuScenes.Contains(scene.name);
         AudioClip targetClip = isMenu ? menuMusic : levelMusic;
+
         if (musicSource != null && musicSource.clip != targetClip)
         {
             StopAllCoroutines();
             StartCoroutine(SwitchMusic(targetClip));
         }
+
         AssignSliders();
     }
 
@@ -88,6 +98,7 @@ public class BGMusic : MonoBehaviour
     {
         GameObject obj = GameObject.FindWithTag(musicSliderTag);
         if (obj == null) return;
+
         musicSlider = obj.GetComponent<Slider>();
         if (musicSlider == null) return;
 
@@ -98,8 +109,7 @@ public class BGMusic : MonoBehaviour
             musicVolume = v;
             if (musicSource != null)
                 musicSource.volume = v;
-            if (GameSaveManager.Instance != null)
-                GameSaveManager.Instance.UpdateSettings(musicVolume, sfxVolume);
+            ScheduleSave();
         });
     }
 
@@ -107,18 +117,36 @@ public class BGMusic : MonoBehaviour
     {
         GameObject obj = GameObject.FindWithTag(sfxSliderTag);
         if (obj == null) return;
+
         sfxSlider = obj.GetComponent<Slider>();
         if (sfxSlider == null) return;
 
         sfxSlider.onValueChanged.RemoveAllListeners();
         sfxSlider.value = sfxVolume;
-        sfxSlider.onValueChanged.AddListener(SetSfxVolume);
+        sfxSlider.onValueChanged.AddListener(v =>
+        {
+            sfxVolume = v;
+            ApplySfxVolume();
+            ScheduleSave();
+        });
     }
 
-    private void SetSfxVolume(float value)
+    private void ScheduleSave()
     {
-        sfxVolume = value;
-        ApplySfxVolume();
+        lastChangeTime = Time.time;
+
+        if (!isSavingScheduled)
+            StartCoroutine(DelayedSave());
+    }
+
+    private IEnumerator DelayedSave()
+    {
+        isSavingScheduled = true;
+        while (Time.time - lastChangeTime < saveDelay)
+            yield return null;
+
+        isSavingScheduled = false;
+
         if (GameSaveManager.Instance != null)
             GameSaveManager.Instance.UpdateSettings(musicVolume, sfxVolume);
     }
@@ -126,12 +154,14 @@ public class BGMusic : MonoBehaviour
     private void ApplySfxVolume()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag(playerTag);
-        if (players == null) return;
+        if (players == null || players.Length == 0) return;
 
         foreach (GameObject player in players)
         {
+            if (player == null) continue;
+
             AudioSource[] sources = player.GetComponentsInChildren<AudioSource>();
-            if (sources == null) continue;
+            if (sources == null || sources.Length == 0) continue;
 
             foreach (AudioSource src in sources)
             {
@@ -143,7 +173,8 @@ public class BGMusic : MonoBehaviour
 
     private IEnumerator SwitchMusic(AudioClip newClip)
     {
-        if (musicSource == null || musicSource.clip == newClip) yield break;
+        if (musicSource == null || musicSource.clip == newClip)
+            yield break;
 
         while (musicSource.volume > 0f)
         {
